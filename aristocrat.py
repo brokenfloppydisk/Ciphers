@@ -1,6 +1,7 @@
 import string
 
 from alphabet import Alphabet
+from math import log10
 
 def flip(alphabet: Alphabet) -> dict:
     """Returns the alphabet with the plaintext and ciphertext swapped.
@@ -46,6 +47,24 @@ def distributions(text: str) -> dict:
             dist[letter.lower()] += 1
     
     return dist
+
+def print_distribution_table(text: str, percentages: bool=False) -> None:
+    """Prints the letter distribution table for a piece of text.
+    """
+
+    dist = distributions(text)
+
+    letters = ""
+    numbers = ""
+
+    for letter in string.ascii_lowercase:
+        # make sure the letters are spaced evenly according to the numbers
+        num_digits = (1 if dist[letter] == 0 else int(log10(dist[letter])) + 1)
+        letters += letter + ( " " * (num_digits - 1)) + " "
+        numbers += str(dist[letter]) + " "
+    
+    print("Letter distribution:\n" + letters + "\n" + numbers + "\n")
+
 
 def patristocrat(text: str) -> str:
     """Returns the text formatted as a patristocrat

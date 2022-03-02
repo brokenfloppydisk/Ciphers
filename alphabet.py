@@ -34,12 +34,12 @@ def keyword_text(keyword: str) -> str:
 
     return text
 
-def k_1_alphabet(shift: int) -> dict:
+def k_1_alphabet(shift: int) -> Alphabet:
     """Returns a K1 alphabet with the shift.
     """
     return {ascii_lowercase[i] : ascii_lowercase[(i + shift) % 26] for i in range(26)}
 
-def k_2_alphabet(shift: int, keyword: str) -> dict:
+def k_2_alphabet(shift: int, keyword: str) -> Alphabet:
     """Returns a K2 alphabet with the shift and keyword.
     """
     ct_alphabet = shift_text(keyword_text(keyword), shift)
