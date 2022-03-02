@@ -46,6 +46,8 @@ def solve_cipher(quote: str, alphabet: Alphabet, use_patristo:bool=False) -> Non
             break
         elif user_input == ".":
             show_distribution = not show_distribution
+        elif user_input == "reset":
+            user_alphabet = Alphabet({ ascii_lowercase[i] : ascii_lowercase[i] for i in range(26) })
         elif len(user_input) == 2:
             if any(letter in user_input for letter in ascii_lowercase):
                 user_alphabet[user_input[0]] = user_input[1]
