@@ -14,12 +14,12 @@ def shift_text(list: list, shift: int, left: bool=True) -> list:
     # Make a copy of the input list
     shifted_list = list.copy()
 
-    # Perform a modulus on the shift to keep it in the range of 0 to 25.
-    shift = shift % 26
-
     # Convert a left shift to a right shift (equivalent left shift + right shift = 26)
     if left:
         shift = 26 - shift
+
+    # Perform a modulus on the shift to keep it in the range of 0 to 25.
+    shift = shift % 26
 
     # Repeat by the number of shifts
     for _ in range(shift):

@@ -48,7 +48,7 @@ def distributions(text: str) -> dict:
     
     return dist
 
-def print_distribution_table(text: str, percentages: bool=False) -> None:
+def distribution_table(text: str, percentages: bool=False) -> str:
     """Prints the letter distribution table for a piece of text.
     """
 
@@ -63,7 +63,7 @@ def print_distribution_table(text: str, percentages: bool=False) -> None:
         letters += letter + ( " " * (num_digits - 1)) + " "
         numbers += str(dist[letter]) + " "
     
-    print("Letter distribution:\n" + letters + "\n" + numbers + "\n")
+    return "Letter distribution:\n" + letters + "\n" + numbers + "\n"
 
 
 def patristocrat(text: str) -> str:
