@@ -6,7 +6,7 @@ from math import log10
 def flip(alphabet: Alphabet) -> dict:
     """Returns the alphabet with the plaintext and ciphertext swapped.
     """
-    
+
     return {alphabet[item] : item for item in alphabet}
 
 def encrypt(text: str, alphabet: Alphabet) -> str:

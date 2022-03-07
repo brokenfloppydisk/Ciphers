@@ -1,36 +1,50 @@
-# Import from standard python modules
+# Import a list of lowercase ascii letters from the standard python string module.
 from string import ascii_lowercase
+# Import the NewType constructor from the standard python typing module.
 from typing import NewType 
 
+# Create the Alphabet type, which extends from the dictionary type.
 Alphabet = NewType("Alphabet", dict)
+# Create the Text type, which extends from the string type.
 Text = NewType("Text", str)
 
-def shift_text(list: list, shift: int) -> list:
+def shift_text(list: list, shift: int, left: bool=True) -> list:
     """Shifts a list by the shift amount and returns it
     """
     # Make a copy of the input list
-    new_list = list.copy()
+    shifted_list = list.copy()
 
-    # Repeat by the number of shifts (modulo converts negative shifts to positive shifts)
-    for _ in range(shift % 26):
-        # Move items from the end of the list to the front, shifting the list to the right by 1 space
-        new_list.insert(0, new_list.pop(25))
-    return new_list
+    # Perform a modulus on the shift to keep it in the range of 0 to 25.
+    shift = shift % 26
+
+    # Convert a left shift to a right shift (equivalent left shift + right shift = 26)
+    if left:
+        shift = 26 - shift
+
+    # Repeat by the number of shifts
+    for _ in range(shift):
+        # Move an from the end of the list to the front
+        # shifts the list to the right by 1 space
+        shifted_list.insert(0, shifted_list.pop(25))
+    
+    # Return the shifted list
+    return shifted_list
 
 def keyword_text(keyword: str) -> str:
-    """Generates a dict 
+    """Generates the alphabet starting with the keyword 
+    and continuing in alphabetical order.
     """
-    # Normalize keyword (remove duplicates and make lowercase)
-    new_keyword = ""
+    # Create an empty keyword to use as the normalized keyword
+    normalized_keyword = ""
     
     # Iterate through every item in the keyword, as a lowercase letter
     for i in keyword.lower():
-        # Add unique lowercase letters to the new keyword
-        if i not in new_keyword and i in ascii_lowercase:
-            new_keyword += i
+        # Add unique lowercase letters to the normalized keyword
+        if i not in normalized_keyword and i in ascii_lowercase:
+            normalized_keyword += i
     
     # Set the keyword to the normalized keyword
-    keyword = new_keyword
+    keyword = normalized_keyword
 
     # Create a list of the letters in the alphabet not in the keyword
     text = [i for i in ascii_lowercase if i not in keyword]
@@ -48,10 +62,10 @@ def k_1_alphabet(shift: int) -> Alphabet:
     """Returns a K1 alphabet with the shift.
     """
     # Set the ciphertext alphabet to a list of lowercase ascii letters shifted by the shift
-    ct_alphabet = shift_text(ascii_lowercase, 26)
+    ct_alphabet = shift_text(list(ascii_lowercase), shift)
 
     # Return a dictionary of lowercase ascii letters mapped to ciphertext
-    return dict.fromkeys(ascii_lowercase, ct_alphabet)
+    return dict(zip(ascii_lowercase, ct_alphabet))
 
 def k_2_alphabet(shift: int, keyword: str) -> Alphabet:
     """Returns a K2 alphabet with the shift and keyword.
@@ -61,26 +75,33 @@ def k_2_alphabet(shift: int, keyword: str) -> Alphabet:
     ct_alphabet = shift_text(keyword_text(keyword), shift)
 
     # Return a dictionary of lowercase ascii letters mapped to the ciphertext
-    return dict.fromkeys(ascii_lowercase, ct_alphabet)
+    return dict(zip(ascii_lowercase, ct_alphabet))
 
 def k_3_alphabet(shift_1: int, shift_2: int, keyword: str) -> Alphabet:
     """Returns a K3 alphabet with the shifts and keyword.
     """
     # Set the plaintext alphabet to an alphabet with the keyword at the front
     pt_alphabet = keyword_text(keyword)
+
     # Create the ciphertext alphabet by shifting the plaintext alphabet
     ct_alphabet = shift_text(pt_alphabet, shift_2)
+
     # Shift the plaintext alphabet
     pt_alphabet = shift_text(pt_alphabet, shift_1)
 
-    
-    return dict.fromkeys(pt_alphabet, ct_alphabet)
+    # Return a dictionary mapping the plaintext to the ciphertext.
+    return dict(zip(pt_alphabet, ct_alphabet))
 
 def k_4_alphabet(shift_1: int, shift_2: int, keyword_1: str, keyword_2: str) -> Alphabet:
     """Returns a K4 alphabet with the shifts and keywords.
     """
-
+    # Create the plaintext alphabet by creating an alphabet with the 
+    # first keyword at the front, and shifting it by the first shift.
     pt_alphabet = shift_text(keyword_text(keyword_1), shift_1)
+
+    # Create the ciphertext alphabet in the same way, 
+    # but using the second keyword and shift.
     ct_alphabet = shift_text(keyword_text(keyword_2), shift_2)
 
-    return dict.fromkeys(pt_alphabet, ct_alphabet)
+    # Return a dictionary mapping the plaintext to the ciphertext.
+    return dict(zip(pt_alphabet, ct_alphabet))
