@@ -4,8 +4,6 @@ import alphabet as alpha
 from string import ascii_lowercase
 from alphabet import Alphabet, k_1_alphabet
 
-print(k_1_alphabet(1))
-
 def solve_cipher(quote: str, alphabet: Alphabet, use_patristo:bool=False) -> None:
     """ Prompt the user to solve a cipher by typing in letters to swap.
     """
