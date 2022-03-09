@@ -1,5 +1,5 @@
-import string
 
+from string import ascii_lowercase
 from alphabet import Alphabet
 from math import log10
 
@@ -40,7 +40,7 @@ def distributions(text: str) -> dict:
     """Returns a dictionary of letter distributions.
     """
 
-    dist = {i : 0 for i in string.ascii_lowercase}
+    dist = {i : 0 for i in ascii_lowercase}
 
     for letter in text:
         if (letter.isalpha()):
@@ -57,7 +57,7 @@ def distribution_table(text: str, percentages: bool=False) -> str:
     letters = ""
     numbers = ""
 
-    for letter in string.ascii_lowercase:
+    for letter in ascii_lowercase:
         # make sure the letters are spaced evenly according to the numbers
         num_digits = (1 if dist[letter] == 0 else int(log10(dist[letter])) + 1)
         letters += letter + ( " " * (num_digits - 1)) + " "
@@ -69,6 +69,14 @@ def distribution_table(text: str, percentages: bool=False) -> str:
 def patristocrat(text: str) -> str:
     """Returns the text formatted as a patristocrat
     """
+    formatted_text = ""
+
+    for character in text:
+        if character in ascii_lowercase:
+            formatted_text += character
+
+    text = formatted_text
+
     output = ""
 
     # Add each letter to the output
