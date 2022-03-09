@@ -1,11 +1,13 @@
 # Import modules (other files of code)
+from random import randint
 from typing import Tuple
 import aristocrat as aristo
 import alphabet as alpha
+from quotes import quotes
 from string import ascii_lowercase
 from alphabet import Alphabet
 
-def get_menu_input(prompt: str, show_options: bool=False, *functions: Tuple, **function_dict) -> bool:
+def get_menu_input(initial_text: str, prompt: str, can_exit: bool=False, *functions: Tuple, **function_dict) -> bool:
     """ Asks the user a question and performs a function depending on the answer.
     
     Returns True if a function was run, otherwise returns False
@@ -13,25 +15,26 @@ def get_menu_input(prompt: str, show_options: bool=False, *functions: Tuple, **f
     *functions should be tuples of (str, function)
 
     **function_dict should be kwargs of function_name=function
-
-    Unless the name of the function cannot be pre-determined, **function_dict should be used over *functions.
     """
     # Add functions to function dictionary
     for item in functions:
         name, function = item
         function_dict[name] = function
 
-    options = "\nOptions: \n" + "\n".join([f"'{option}' for {function_dict[option].__name__}" for option in function_dict]) + "\n"
-
+    options = "\nOptions: \n" + ", ".join([option for option in function_dict]) + "\n"
+    
     function_executed = False
+
+    print(initial_text)
 
     # Loop if a function has not been executed
     while not function_executed:
         # Print the question and get the lowercase form of the answer
-        user_input: str = input(prompt + " Type 'help' for more help. ").lower()
+        user_input: str = input(prompt + " Type 'help' for more help. " + 
+            ("Type 'exit' to exit" if can_exit else "")).lower()
 
         # Exit from the loop and return False, as a function was not executed
-        if user_input == "exit":
+        if user_input == "exit" and can_exit:
             break
         elif user_input == "help":
             print(options)
@@ -46,6 +49,31 @@ def get_menu_input(prompt: str, show_options: bool=False, *functions: Tuple, **f
         print("\nInvalid input!\n")
     
     return function_executed
+
+def solve_cipher_menu() -> None:
+    """ Prompt the user to select a cipher to solve.
+    """
+    get_menu_input("", "Choose an encryption alphabet type.", 
+        False,
+        ("k1", lambda : generate_random_cipher(alpha.k_1_alphabet)),
+        ("k2", lambda : generate_random_cipher(alpha.k_2_alphabet)),
+        ("k3", lambda : generate_random_cipher(alpha.k_3_alphabet)),
+        ("k4", lambda : generate_random_cipher(alpha.k_4_alphabet))
+    )
+
+def generate_random_cipher(alphabet_generator) -> None:
+    """ Generate a random cipher with the alphabet generator provided and have the user solve it.
+
+    alphabet_generator should be a function
+    """
+    quote = quotes[randint(0, len(quotes)-1)]
+
+    get_menu_input("Would you like your cipher to be formatted as a patristocrat?", 
+        "Please enter True or False.", 
+        False,
+        ("true", lambda : solve_cipher(quote, alphabet_generator(), True)),
+        ("false", lambda : solve_cipher(quote, alphabet_generator()))
+    )
 
 def solve_cipher(quote: str, alphabet: Alphabet, use_patristo:bool=False) -> None:
     """ Prompt the user to solve a cipher by typing in letters to swap.
@@ -130,16 +158,21 @@ def solve_cipher(quote: str, alphabet: Alphabet, use_patristo:bool=False) -> Non
         print("Cipher decrypted!")
     else:
         print("Try again next time...")
+    
+    print("\n\nReturning to the main menu...\n\n")
+
+    __main__()
 
 def generate_cipher():
-    """ TODO Prompt the user to generate a cipher.
+    """ TODO Prompt the user to generate a cipher, and print it to the console.
     """
 
+
 def __main__():
-    get_menu_input("Welcome to cipher practice! Please enter an option from the list of options.",
-    True,
-    ("solve ciphers", solve_cipher("Hello there", alpha.k_1_alphabet(1))),
-    ("generate ciphers", generate_cipher)
+    get_menu_input("Welcome to cipher practice!", "Please enter a command.", 
+        True,
+        ("generate cipher" , generate_cipher),
+        ("solve cipher" , solve_cipher_menu),
     )
 
 if __name__ == "__main__":

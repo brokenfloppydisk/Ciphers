@@ -58,18 +58,25 @@ def keyword_text(keyword: str) -> str:
     # Return the final string
     return text
 
-def k_1_alphabet(shift: int) -> Alphabet:
+def k_1_alphabet(shift: int=None) -> Alphabet:
     """Returns a K1 alphabet with the shift.
     """
+    # If shift is not set, prompt user to enter it.
+    shift = (_set_shift() if shift is None else shift)
+
     # Set the ciphertext alphabet to a list of lowercase ascii letters shifted by the shift
     ct_alphabet = shift_text(list(ascii_lowercase), shift)
 
     # Return a dictionary of lowercase ascii letters mapped to ciphertext
     return dict(zip(ascii_lowercase, ct_alphabet))
 
-def k_2_alphabet(shift: int, keyword: str) -> Alphabet:
+def k_2_alphabet(shift: int=None, keyword: str=None) -> Alphabet:
     """Returns a K2 alphabet with the shift and keyword.
     """
+    # If shift or keyword are not set, prompt user to enter them.
+    shift = (_set_shift() if shift is None else shift)
+    keyword = (input("Please enter a keyword") if keyword is None else keyword)
+
     # Set the ciphertext alphabet to a list of lowercase ascii letters with
     # the keyword at the front and shifted by the shift
     ct_alphabet = shift_text(keyword_text(keyword), shift)
@@ -77,9 +84,14 @@ def k_2_alphabet(shift: int, keyword: str) -> Alphabet:
     # Return a dictionary of lowercase ascii letters mapped to the ciphertext
     return dict(zip(ascii_lowercase, ct_alphabet))
 
-def k_3_alphabet(shift_1: int, shift_2: int, keyword: str) -> Alphabet:
+def k_3_alphabet(shift_1: int=None, shift_2: int=None, keyword: str=None) -> Alphabet:
     """Returns a K3 alphabet with the shifts and keyword.
     """
+    # If shift or keyword are not set, prompt user to enter them.
+    shift_1 = (_set_shift() if shift_1 is None else shift_1)
+    shift_2 = (_set_shift() if shift_2 is None else shift_2)
+    keyword = (input("Please enter a keyword") if keyword is None else keyword)
+
     # Set the plaintext alphabet to an alphabet with the keyword at the front
     pt_alphabet = keyword_text(keyword)
 
@@ -95,6 +107,12 @@ def k_3_alphabet(shift_1: int, shift_2: int, keyword: str) -> Alphabet:
 def k_4_alphabet(shift_1: int, shift_2: int, keyword_1: str, keyword_2: str) -> Alphabet:
     """Returns a K4 alphabet with the shifts and keywords.
     """
+    # If shift or keyword are not set, prompt user to enter them.
+    shift_1 = (_set_shift() if shift_1 is None else shift_1)
+    shift_2 = (_set_shift() if shift_2 is None else shift_2)
+    keyword_1 = (input("Please enter a keyword") if keyword_1 is None else keyword_1)
+    keyword_2 = (input("Please enter a keyword") if keyword_2 is None else keyword_2)
+
     # Create the plaintext alphabet by creating an alphabet with the 
     # first keyword at the front, and shifting it by the first shift.
     pt_alphabet = shift_text(keyword_text(keyword_1), shift_1)
@@ -105,3 +123,9 @@ def k_4_alphabet(shift_1: int, shift_2: int, keyword_1: str, keyword_2: str) -> 
 
     # Return a dictionary mapping the plaintext to the ciphertext.
     return dict(zip(pt_alphabet, ct_alphabet))
+
+def _set_shift() -> int:
+    shift = input("Please enter a shift. ")
+    while not shift.isdigit():
+        shift = input("Invalid input. Please enter a number. ")
+    return int(shift)
