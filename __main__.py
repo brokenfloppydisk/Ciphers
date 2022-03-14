@@ -34,7 +34,7 @@ def get_menu_input(initial_text: str, prompt: str, can_exit: bool=False, *functi
     # Loop if a function has not been executed
     while not function_output:
         # Print the question and get the lowercase form of the answer
-        user_input: str = input(prompt + " Type 'help' for more help. " + 
+        user_input: str = input(prompt + "Type 'help' for more help. " + 
             ("Type 'exit' to exit. " if can_exit else "")).lower()
 
         # Exit from the loop and return False, as a function was not executed
@@ -55,7 +55,7 @@ def get_menu_input(initial_text: str, prompt: str, can_exit: bool=False, *functi
 def choose_alphabet():
     """ Prompt user to select an alphabet generator, and returns it as a function
     """
-    return get_menu_input("", "Choose an encryption alphabet type.", 
+    return get_menu_input("", "Choose an encryption alphabet type. ", 
         False,
         ("k1", lambda : alpha.k_1_alphabet),
         ("k2", lambda : alpha.k_2_alphabet),
@@ -65,17 +65,20 @@ def choose_alphabet():
 
 def generate_random_cipher() -> None:
     """ Generate a random cipher and have the user solve it.
-
-    alphabet_generator should be a function
     """
+    # Have the user choose the alphabet generator to use and then run it to get the alphabet.
     alphabet = choose_alphabet()()
 
+    # Get a random quote from the list of quotes
     quote = quotes[randint(0, len(quotes)-1)]
 
+    # Lambda (anonymous) function to solve the cipher using patristocrat formatting (all capitalized)
     patristocrat = lambda : solve_cipher(quote=quote, alphabet=alphabet, use_patristo=True)
+    # Lambda (anonymous) function to solve the cipher with aristocrat formatting (no caps)
     aristocrat = lambda : solve_cipher(quote=quote, alphabet=alphabet)
 
-    get_menu_input("Would you like your cipher to be formatted as a patristocrat?", 
+    # Run the corresponding solve cipher based on whether or not the user wants to format it as a patristocrat
+    get_menu_input("Would you like your cipher to be formatted as a patristocrat (all caps with letters in group of 5)? ", 
         "Please enter True or False.", 
         False,
         ("true", patristocrat),
@@ -84,8 +87,6 @@ def generate_random_cipher() -> None:
 
 def generate_user_cipher() -> None:
     """ Generate a user-created cipher with the alphabet generator provided.
-
-    alphabet_generator should be a function.
     """
     alphabet = choose_alphabet()()
 
@@ -94,19 +95,22 @@ def generate_user_cipher() -> None:
     patristocrat = lambda : solve_cipher(quote=quote, alphabet=alphabet, use_patristo=True)
     aristocrat = lambda : solve_cipher(quote=quote, alphabet=alphabet)
 
-    get_menu_input("Would you like to print your cipher or solve it?",
+    get_menu_input("Would you like to print your cipher or solve it? ",
         "",
         False,
-        ("print cipher", lambda : print(aristo.encrypt(quote, alphabet)),
-        ("solve cipher", lambda : (
+        ("print cipher", lambda : print(aristo.encrypt(quote, alphabet))),
+        ("solve cipher", lambda : 
             get_menu_input("Would you like your cipher to be formatted as a patristocrat?", 
             "Please enter True or False.", 
             False,
             ("true", patristocrat),
             ("false", aristocrat)
             )
-        )))
+        )
     )
+
+    # Return to main menu
+    __main__(True)
 
 def solve_cipher(quote: str, alphabet: Alphabet, use_patristo:bool=False) -> None:
     """ Prompt the user to solve a cipher by typing in letters to swap.
@@ -196,21 +200,24 @@ def solve_cipher(quote: str, alphabet: Alphabet, use_patristo:bool=False) -> Non
     else:
         print("Try again next time...")
     
-    print("\n\nReturning to the main menu...\n\n")
+    __main__(True)
 
-    __main__()
-
-def generate_cipher():
-    """ TODO Prompt the user to generate a cipher, and print it to the console.
-    """
-
-
-def __main__():
-    get_menu_input("Welcome to cipher practice!", "Please enter a command.", 
+def __main__(returning: bool=False):
+    # Print banner if launching the program, otherwise print returning to main menu
+    if not returning: 
+        print("-"*80 + "\n" + " "*33 + "Cipher toolkit\n" + "-"*80)
+    else:
+        print("\n\nReturning to the main menu...\n\n")
+    
+    exit_status = get_menu_input("Welcome to cipher toolkit! ", 
+        "Please enter a command.", 
         True,
         ("generate cipher" , generate_user_cipher),
         ("solve cipher" , generate_random_cipher),
     )
+    
+    if exit_status == False:
+        exit(0)
 
 if __name__ == "__main__":
     __main__()
