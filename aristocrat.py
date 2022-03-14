@@ -1,11 +1,12 @@
+# Import a list of the lowercase ascii characters from the default python string module
 from string import ascii_lowercase
+# Import the Alphabet type from alphabet
 from alphabet import Alphabet
-from math import log10
 
-def flip(alphabet: Alphabet) -> dict:
+def flip(alphabet: Alphabet) -> Alphabet:
     """Returns the alphabet with the plaintext and ciphertext swapped.
     """
-
+    # Return a dictionary with value : key for key : value in the original dictionary
     return {alphabet[item] : item for item in alphabet}
 
 def encrypt(text: str, alphabet: Alphabet) -> str:
@@ -14,14 +15,15 @@ def encrypt(text: str, alphabet: Alphabet) -> str:
 
     output = ""
 
-    # Add the corresponding letter from the ciphertext 
-    # to the output for each plaintext letter
-    for letter in text:
-        if (letter.isalpha()):
-            output += alphabet[letter.lower()]
+    # Output the ciphertext letter corresponding to each plaintext letter
+    for character in text:
+        # Check if the character is a letter
+        if (character.isalpha()):
+            # Add the corresponding ciphertext letter
+            output += alphabet[character.lower()]
         else:
             # Output the original character if it is not a letter
-            output += letter
+            output += character
 
     return output
 
@@ -39,29 +41,34 @@ def distributions(text: str) -> dict:
     """Returns a dictionary of letter distributions.
     """
 
-    dist = {i : 0 for i in ascii_lowercase}
+    # Make a dictionary of distributions with 0 assigned to each letter
+    letter_count = {i : 0 for i in ascii_lowercase}
 
-    for letter in text:
-        if (letter.isalpha()):
-            dist[letter.lower()] += 1
+    # Add 1 to the letter count for each character that is a letter
+    for character in text:
+        if (character.isalpha()):
+            letter_count[character.lower()] += 1
     
-    return dist
+    return letter_count
 
 def distribution_table(text: str, percentages: bool=False) -> str:
     """Prints the letter distribution table for a piece of text.
     """
+    # Get the distributions of the letters
+    distribution = distributions(text)
 
-    dist = distributions(text)
-
+    # Top and bottom rows of the table
     letters = ""
     numbers = ""
 
     for letter in ascii_lowercase:
-        # make sure the letters are spaced evenly according to the numbers
-        num_digits = (1 if dist[letter] == 0 else int(log10(dist[letter])) + 1)
-        letters += letter + ( " " * (num_digits - 1)) + " "
-        numbers += str(dist[letter]) + " "
+        value = str(distribution[letter])
+        # Add the letter, and then add whitespace to match the number of digits
+        letters += letter + ( " " * len(value)) + " "
+        # Add the number of times the letter appears
+        numbers += value + " "
     
+    # Return the table as a single string
     return "Letter distribution:\n" + letters + "\n" + numbers + "\n"
 
 
@@ -70,8 +77,11 @@ def patristocrat(text: str) -> str:
     """
     formatted_text = ""
 
+    # Remove non-ascii characters
     for character in text:
-        if character in ascii_lowercase:
+        # Check if the lowercase version of the character is a lowercase letter
+        if character.lower() in ascii_lowercase:
+            # Add it to the formatted text if it is a letter
             formatted_text += character
 
     text = formatted_text

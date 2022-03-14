@@ -8,11 +8,11 @@ Alphabet = NewType("Alphabet", dict)
 # Create the Text type, which extends from the string type.
 Text = NewType("Text", str)
 
-def shift_text(list: list, shift: int, left: bool=True) -> list:
+def shift_text(input_list: list, shift: int, left: bool=True) -> list:
     """Shifts a list by the shift amount and returns it
     """
     # Make a copy of the input list
-    shifted_list = list.copy()
+    shifted_list = list(input_list).copy()
 
     # Convert a left shift to a right shift (equivalent left shift + right shift = 26)
     if left:
