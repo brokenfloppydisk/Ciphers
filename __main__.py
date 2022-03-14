@@ -1,10 +1,14 @@
-# Import modules (other files of code)
+# Import a random number generator from the standard python random module
 from random import randint
+# Import the tuple type hint from the standard python typing module
 from typing import Tuple
+# Import a list of the lowercase ascii letters from the standard python string module
+from string import ascii_lowercase
+
+# Import other python files
 import aristocrat as aristo
 import alphabet as alpha
 from quotes import quotes
-from string import ascii_lowercase
 from alphabet import Alphabet
 
 def get_menu_input(initial_text: str, prompt: str, can_exit: bool=False, *functions: Tuple, **function_dict) -> bool:
@@ -23,15 +27,15 @@ def get_menu_input(initial_text: str, prompt: str, can_exit: bool=False, *functi
 
     options = "\nOptions: \n" + ", ".join([option for option in function_dict]) + "\n"
     
-    function_executed = False
+    function_output = False
 
     print(initial_text)
 
     # Loop if a function has not been executed
-    while not function_executed:
+    while not function_output:
         # Print the question and get the lowercase form of the answer
         user_input: str = input(prompt + " Type 'help' for more help. " + 
-            ("Type 'exit' to exit" if can_exit else "")).lower()
+            ("Type 'exit' to exit. " if can_exit else "")).lower()
 
         # Exit from the loop and return False, as a function was not executed
         if user_input == "exit" and can_exit:
@@ -42,37 +46,66 @@ def get_menu_input(initial_text: str, prompt: str, can_exit: bool=False, *functi
         # Check the keyword arguments to see if the input is assigned to a function
         elif user_input in function_dict:
             # Run the corresponding function
-            function_dict[user_input]()
-            function_executed = True
-            break
-
+            return function_dict[user_input]()
+        
         print("\nInvalid input!\n")
     
-    return function_executed
+    return function_output
 
-def solve_cipher_menu() -> None:
-    """ Prompt the user to select a cipher to solve.
+def choose_alphabet():
+    """ Prompt user to select an alphabet generator, and returns it as a function
     """
-    get_menu_input("", "Choose an encryption alphabet type.", 
+    return get_menu_input("", "Choose an encryption alphabet type.", 
         False,
-        ("k1", lambda : generate_random_cipher(alpha.k_1_alphabet)),
-        ("k2", lambda : generate_random_cipher(alpha.k_2_alphabet)),
-        ("k3", lambda : generate_random_cipher(alpha.k_3_alphabet)),
-        ("k4", lambda : generate_random_cipher(alpha.k_4_alphabet))
+        ("k1", lambda : alpha.k_1_alphabet),
+        ("k2", lambda : alpha.k_2_alphabet),
+        ("k3", lambda : alpha.k_3_alphabet),
+        ("k4", lambda : alpha.k_4_alphabet)
     )
 
-def generate_random_cipher(alphabet_generator) -> None:
-    """ Generate a random cipher with the alphabet generator provided and have the user solve it.
+def generate_random_cipher() -> None:
+    """ Generate a random cipher and have the user solve it.
 
     alphabet_generator should be a function
     """
+    alphabet = choose_alphabet()()
+
     quote = quotes[randint(0, len(quotes)-1)]
+
+    patristocrat = lambda : solve_cipher(quote=quote, alphabet=alphabet, use_patristo=True)
+    aristocrat = lambda : solve_cipher(quote=quote, alphabet=alphabet)
 
     get_menu_input("Would you like your cipher to be formatted as a patristocrat?", 
         "Please enter True or False.", 
         False,
-        ("true", lambda : solve_cipher(quote, alphabet_generator(), True)),
-        ("false", lambda : solve_cipher(quote, alphabet_generator()))
+        ("true", patristocrat),
+        ("false", aristocrat)
+    )
+
+def generate_user_cipher() -> None:
+    """ Generate a user-created cipher with the alphabet generator provided.
+
+    alphabet_generator should be a function.
+    """
+    alphabet = choose_alphabet()()
+
+    quote = input("Please enter a quote to encrypt. ")
+
+    patristocrat = lambda : solve_cipher(quote=quote, alphabet=alphabet, use_patristo=True)
+    aristocrat = lambda : solve_cipher(quote=quote, alphabet=alphabet)
+
+    get_menu_input("Would you like to print your cipher or solve it?",
+        "",
+        False,
+        ("print cipher", lambda : print(aristo.encrypt(quote, alphabet)),
+        ("solve cipher", lambda : (
+            get_menu_input("Would you like your cipher to be formatted as a patristocrat?", 
+            "Please enter True or False.", 
+            False,
+            ("true", patristocrat),
+            ("false", aristocrat)
+            )
+        )))
     )
 
 def solve_cipher(quote: str, alphabet: Alphabet, use_patristo:bool=False) -> None:
@@ -93,9 +126,13 @@ def solve_cipher(quote: str, alphabet: Alphabet, use_patristo:bool=False) -> Non
     user_alphabet = alpha.k_1_alphabet(0)
 
     while not solved:
+        user_decryption = aristo.encrypt(encrypted_cipher, user_alphabet)
+
         # Print question text
-        print("Original Cipher:\n" + encrypted_cipher + 
-            "\nYour decryption:\n" + aristo.encrypt(encrypted_cipher, user_alphabet) + "\n\n" + 
+        print("Original Cipher:\n" + 
+            encrypted_cipher + 
+            "\nYour decryption:\n" + 
+            (aristo.patristocrat(user_decryption) if use_patristo else user_decryption) + "\n\n" + 
             "Your key:\n" +
             "Ciphertext (encrypted) letters: \n" + 
             " ".join(list(ascii_lowercase)) + "\n" + 
@@ -171,8 +208,8 @@ def generate_cipher():
 def __main__():
     get_menu_input("Welcome to cipher practice!", "Please enter a command.", 
         True,
-        ("generate cipher" , generate_cipher),
-        ("solve cipher" , solve_cipher_menu),
+        ("generate cipher" , generate_user_cipher),
+        ("solve cipher" , generate_random_cipher),
     )
 
 if __name__ == "__main__":

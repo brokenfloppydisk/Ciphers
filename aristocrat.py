@@ -1,4 +1,3 @@
-
 from string import ascii_lowercase
 from alphabet import Alphabet
 from math import log10
