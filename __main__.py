@@ -12,7 +12,7 @@ from math import floor
 # Import other python files
 import aristocrat as aristo
 import alphabet as alpha
-from quotes import quotes
+import quotes
 from alphabet import Alphabet
 
 def print_banner(banner_text: str) -> None:
@@ -83,7 +83,7 @@ def practice_cipher() -> None:
     alphabet = choose_alphabet()()
 
     # Get a random quote from the list of quotes
-    quote = quotes[randint(0, len(quotes)-1)]
+    quote = quotes.quotes[randint(0, len(quotes.quotes)-1)]
 
     # Lambda (anonymous) function to solve the cipher using patristocrat formatting (all capitalized)
     patristocrat = lambda : solve_cipher(quote=quote, alphabet=alphabet, use_patristo=True)
