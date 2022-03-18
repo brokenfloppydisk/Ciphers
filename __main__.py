@@ -79,24 +79,27 @@ def choose_alphabet(prompt="Choose an encryption alphabet type. "):
 def practice_cipher() -> None:
     """ Generate a random cipher and have the user solve it.
     """
-    # Have the user choose the alphabet generator to use and then run it to get the alphabet.
+    # Prompt the user to choose an alphabet, and save the output of 
+    # the corresponding alphabet generator to alphabet.
     alphabet = choose_alphabet()()
+
+    # Get if the user wants to format the cipher as an aristocrat (original spaces are preserved)
+    # or patristocrat cipher (spaces are removed, and letters are shown in capitalized groups of 5)
+    use_patristo = get_menu_input(
+        "Would you like your cipher to be formatted " + 
+        "as a patristocrat (all caps with letters in group of 5)? ", 
+        "Please enter True or False.", 
+        False,
+        ("true", lambda : True),
+        ("false", lambda : False)
+    )
 
     # Get a random quote from the list of quotes
     quote = quotes.quotes[randint(0, len(quotes.quotes)-1)]
 
-    # Lambda (anonymous) function to solve the cipher using patristocrat formatting (all capitalized)
-    patristocrat = lambda : solve_cipher(quote=quote, alphabet=alphabet, use_patristo=True)
-    # Lambda (anonymous) function to solve the cipher with aristocrat formatting (no caps)
-    aristocrat = lambda : solve_cipher(quote=quote, alphabet=alphabet)
-
-    # Run the corresponding solve cipher based on whether or not the user wants to format it as a patristocrat
-    get_menu_input("Would you like your cipher to be formatted as a patristocrat (all caps with letters in group of 5)? ", 
-        "Please enter True or False.", 
-        False,
-        ("true", patristocrat),
-        ("false", aristocrat)
-    )
+    # Pass the quote to solve_cipher to display the encrypted quote to the user
+    # and have the user attempt to reconstruct the original quote
+    solve_cipher(quote=quote, alphabet=alphabet, use_patristo=use_patristo)
 
 def generate_user_cipher() -> None:
     """ Generate a user-created cipher with the alphabet generator provided.
