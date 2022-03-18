@@ -62,7 +62,12 @@ def distribution_table(text: str, percentages: bool=False) -> str:
     numbers = ""
 
     for letter in ascii_lowercase:
-        value = str(distribution[letter])
+        # Represent the distribution of the letter as a percent if needed
+        if percentages:
+            value = str(round(distribution[letter]/len(text)*100, 2)) + "%"
+        else:
+            value = str(distribution[letter])
+        
         # Add the letter, and then add whitespace to match the number of digits
         letters += letter + ( " " * len(value)) + " "
         # Add the number of times the letter appears
@@ -70,7 +75,6 @@ def distribution_table(text: str, percentages: bool=False) -> str:
     
     # Return the table as a single string
     return "Letter distribution:\n" + letters + "\n" + numbers + "\n"
-
 
 def patristocrat(text: str) -> str:
     """Returns the text formatted as a patristocrat
