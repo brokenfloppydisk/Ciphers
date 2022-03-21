@@ -15,8 +15,12 @@ import alphabet as alpha
 import quotes
 from alphabet import Alphabet
 
-def print_banner(banner_text: str) -> None:
+def section_header(banner_text: str) -> None:
+    """ Print a section header:
+    """
+    # Calculate the whitespace before the word to center it
     whitespace_length = floor((80 - len(banner_text)) / 2)
+    # Print a row of dashes, the word, and a row of dashes
     print(
         "-" * 80 + "\n" + 
         " " * whitespace_length + banner_text + "\n" + 
@@ -37,10 +41,13 @@ def get_menu_input(initial_text: str, prompt: str, can_exit: bool=False, *functi
         name, function = item
         function_dict[name] = function
 
+    # Create string for list of options
     options = "\nOptions: \n" + ", ".join([option for option in function_dict]) + "\n"
     
+    # Set function output to false by default to return if function fails to run
     function_output = False
 
+    # Only print initial text if it has something in it
     if initial_text != "":
         print(initial_text)
 
@@ -68,12 +75,26 @@ def get_menu_input(initial_text: str, prompt: str, can_exit: bool=False, *functi
 def choose_alphabet(prompt="Choose an encryption alphabet type. "):
     """ Prompt user to select an alphabet generator, and returns it as a function
     """
+    # User has to type k1, k2, k3, or k4
     return get_menu_input("", prompt, 
         False,
         ("k1", lambda : alpha.k_1_alphabet),
         ("k2", lambda : alpha.k_2_alphabet),
         ("k3", lambda : alpha.k_3_alphabet),
         ("k4", lambda : alpha.k_4_alphabet)
+    )
+
+def choose_patristo() -> bool:
+    """ Get if the user wants to format the cipher as an aristocrat (original spaces are preserved)
+    or patristocrat cipher (spaces are removed, and letters are shown in capitalized groups of 5)
+    and return the result.
+    """
+    return get_menu_input(
+        "Would you like your cipher to be formatted as a patristocrat?", 
+        "Please enter True or False. ", 
+        False,
+        ("true", lambda : True),
+        ("false", lambda : False)
     )
 
 def practice_cipher() -> None:
@@ -85,14 +106,7 @@ def practice_cipher() -> None:
 
     # Get if the user wants to format the cipher as an aristocrat (original spaces are preserved)
     # or patristocrat cipher (spaces are removed, and letters are shown in capitalized groups of 5)
-    use_patristo = get_menu_input(
-        "Would you like your cipher to be formatted " + 
-        "as a patristocrat (all caps with letters in group of 5)? ", 
-        "Please enter True or False.", 
-        False,
-        ("true", lambda : True),
-        ("false", lambda : False)
-    )
+    use_patristo = choose_patristo()
 
     # Get a random quote from the list of quotes
     quote = quotes.quotes[randint(0, len(quotes.quotes)-1)]
@@ -113,17 +127,12 @@ def generate_user_cipher() -> None:
     # Encrypt the cipher
     encrypted_cipher = aristo.encrypt(quote, alphabet)
 
-    # Get if the user wants to convert the cipher to a patristocrat
-    use_patristo = get_menu_input(
-        "Would you like your cipher to be formatted as a patristocrat?", 
-        "Please enter True or False. ", 
-        False,
-        ("true", lambda : True),
-        ("false", lambda : False)
-    )
+    # Get if the user wants to format the cipher as an aristocrat (original spaces are preserved)
+    # or patristocrat cipher (spaces are removed, and letters are shown in capitalized groups of 5)
+    use_patristo = choose_patristo()
 
     # Format the cipher as a patristocrat if needed
-    if use_patristo:
+    if choose_patristo():
         encrypted_cipher = aristo.patristocrat(encrypted_cipher)
     
     # Ask if the user wants to print or practice solving the cipher
@@ -131,35 +140,27 @@ def generate_user_cipher() -> None:
         "",
         False,
         ("print cipher", lambda : 
-            print("The encrypted cipher is: " + 
-                aristo.encrypt(quote, alphabet))
-            ),
+            print("The encrypted cipher is: " + encrypted_cipher)
+        ),
         ("solve cipher", lambda : 
             solve_cipher(quote, alphabet, use_patristo)
         )
     )
-
+    
+    # Wait for half a second after printing the cipher
     sleep(0.5)
-
+    
     # Return to main menu
     main_menu(returning=True)
 
-def solve_unknown_cipher():
+def solve_unknown_cipher() -> None:
     """ Have the user attempt to solve a cipher that they input
     """
     # Get the cipher to solve
     encrypted_text = input("Please enter the encrypted cipher to solve. ")
 
-    # Different functions based on whether or not the cipher should be a patristocrat
-    patristocrat = lambda : solve_cipher(quote=encrypted_text, alphabet=None, use_patristo=True)
-    aristocrat = lambda : solve_cipher(quote=encrypted_text)
-
-    get_menu_input("Would you like your cipher to be formatted as a patristocrat?", 
-        "Please enter True or False.", 
-        False,
-        ("true", patristocrat),
-        ("false", aristocrat)
-    )
+    # Display and have the user solve the cipher
+    solve_cipher(quote=encrypted_text, alphabet=None)
 
 def solve_cipher(quote: str, alphabet: Alphabet=None, use_patristo:bool=False) -> None:
     """ Prompt the user to solve a cipher by typing in letters to swap.
@@ -263,7 +264,7 @@ def solve_cipher(quote: str, alphabet: Alphabet=None, use_patristo:bool=False) -
     
     main_menu(returning=True)
 
-def decrypt_known_cipher():
+def decrypt_known_cipher() -> None:
     """ Decrypt and print a cipher that the user enters, using a user-provided key.
     """
     # Get the encrypted cipher and the alphabet type (key)
@@ -281,12 +282,12 @@ def decrypt_known_cipher():
     # Return to the main menu
     main_menu(returning=True)
 
-def main_menu(returning: bool=False):
+def main_menu(returning: bool=False) -> None:
     # Print banner if launching the program, otherwise print returning to main menu
     if not returning: 
-        print_banner("Cipher toolkit")
+        section_header("Cipher toolkit")
     else:
-        print_banner("Returning to the main menu...")
+        section_header("Returning to the main menu...")
         sleep(0.5)
     
     # Get user input and either go to cipher generation or solving.
@@ -299,7 +300,7 @@ def main_menu(returning: bool=False):
         ("practice cipher" , practice_cipher),
         ("solve unknown cipher", solve_unknown_cipher),
         ("decrypt known cipher", decrypt_known_cipher),
-        ("exit", lambda : print_banner("Exiting program..."))
+        ("exit", lambda : section_header("Exiting program..."))
     )
     
     # Exit the program if the user typed exit
@@ -311,4 +312,3 @@ def __main__():
 
 if __name__ == "__main__":
     __main__()
-
