@@ -19,11 +19,15 @@ def encrypt(text: str, alphabet: Alphabet) -> str:
     for character in text:
         # Check if the character is a letter
         if (character.isalpha()):
-            # Add the corresponding ciphertext letter
+            # Add the corresponding ciphertext letter 
+            # mapped in the alphabet dictionary if it is a letter
             output += alphabet[character.lower()]
         else:
-            # Output the original character if it is not a letter
+            # Add the original character if it is not a letter
             output += character
+    
+    # One-line version using a list comprehension (not used as it is less readable)
+    # return [(alphabet[i.lower()] if i.isalpha() else i) for i in text]
 
     return output
 

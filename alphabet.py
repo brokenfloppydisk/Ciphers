@@ -1,7 +1,7 @@
 # Import a list of lowercase ascii letters from the standard python string module.
 from string import ascii_lowercase
 # Import the NewType constructor from the standard python typing module.
-from typing import NewType 
+from typing import NewType
 
 # Create the Alphabet type, which extends from the dictionary type.
 Alphabet = NewType("Alphabet", dict)
@@ -12,7 +12,7 @@ def shift_text(input_list: list, shift: int, left: bool=True) -> list:
     """Shifts a list by the shift amount and returns it
     """
     # Make a copy of the input list
-    shifted_list = list(input_list).copy()
+    shifted_list = list(input_list)
 
     # Convert a left shift to a right shift (equivalent left shift + right shift = 26)
     if left:
@@ -47,12 +47,13 @@ def keyword_text(keyword: str) -> str:
     keyword = normalized_keyword
 
     # Create a list of the letters in the alphabet not in the keyword
+    # using a list comprehension
     text = [i for i in ascii_lowercase if i not in keyword]
 
-    # Add keyword to the start of the alphabet using list slicing
+    # Add keyword to the start of text using list slicing
     text[:0] = list(keyword)
     
-    # Convert the list to a string
+    # Concatenate all of the items in the text list to form a string
     text = "".join(text)
 
     # Return the final string

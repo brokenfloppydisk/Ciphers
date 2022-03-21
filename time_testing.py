@@ -4,19 +4,18 @@ from alphabet import shift_text
 from aristocrat import distributions
 from math import log10
 
-def compare_functions(*functions) -> None:
-    for index, function in enumerate(functions):
-        start_time = time.time()
-        function()
-        print(f"Function {index} execution time: {time.time() - start_time}")
+def compare_functions(*functions, num_iterations=1) -> None:
+    for i in range(num_iterations):
+        for index, function in enumerate(functions):
+            start_time = time.time()
+            function()
+            print(f"Function {index} execution time: {time.time() - start_time}")
 
 # Compare dictionary comprehension vs. dict(zip())
-compare_functions(
-    lambda : {ascii_lowercase[i] : shift_text(ascii_lowercase, 1)[i] for i in range(26)},
-    lambda : dict(zip(ascii_lowercase, shift_text(ascii_lowercase, 1)))
-)
-
-
+# compare_functions(
+#    lambda : {ascii_lowercase[i] : shift_text(ascii_lowercase, 1)[i] for i in range(26)},
+#    lambda : dict(zip(ascii_lowercase, shift_text(ascii_lowercase, 1)))
+# )
 
 def digits_log10(string: str):
     distribution = distributions(string)
@@ -38,4 +37,17 @@ def digits_convert_to_string(string: str):
         numbers = value + " "
 
 # Compare text creation with log10 or with string conversion, string conversion is 2-3x faster
-compare_functions(lambda : digits_log10("hi"), lambda : digits_convert_to_string("hi"))
+# compare_functions(lambda : digits_log10("hi"), lambda : digits_convert_to_string("hi"))
+
+def not_keyword_text_iterated(keyword: str):
+    text = ""
+    for i in ascii_lowercase:
+        if i not in keyword:
+            text += i
+    return text
+
+# Compare dictionary comprehension to iteration
+compare_functions(lambda : not_keyword_text_iterated("helo"), 
+    lambda : [i for i in ascii_lowercase if i not in "helo"],
+    num_iterations=3
+)
