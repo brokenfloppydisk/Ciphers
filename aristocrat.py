@@ -1,6 +1,4 @@
-# Import a list of the lowercase ascii characters from the default python string module
 from string import ascii_lowercase
-# Import the Alphabet type from alphabet
 from alphabet import Alphabet
 
 def flip(alphabet: Alphabet) -> Alphabet:
@@ -12,18 +10,13 @@ def flip(alphabet: Alphabet) -> Alphabet:
 def encrypt(text: str, alphabet: Alphabet) -> str:
     """Returns the plaintext encrypted using the alphabet.
     """
-
     output = ""
 
     # Output the ciphertext letter corresponding to each plaintext letter
     for character in text:
-        # Check if the character is a letter
         if (character.isalpha()):
-            # Add the corresponding ciphertext letter 
-            # mapped in the alphabet dictionary if it is a letter
             output += alphabet[character.lower()]
         else:
-            # Add the original character if it is not a letter
             output += character
     
     # One-line version using a list comprehension (not used as it is less readable)
@@ -34,7 +27,6 @@ def encrypt(text: str, alphabet: Alphabet) -> str:
 def decrypt(text: str, alphabet: Alphabet) -> str:
     """Returns the ciphertext decrypted using the alphabet.
     """
-
     # Switch the plaintext and ciphertext in the alphabet
     inverse_alphabet = flip(alphabet)
 
@@ -44,7 +36,6 @@ def decrypt(text: str, alphabet: Alphabet) -> str:
 def distributions(text: str) -> dict:
     """Returns a dictionary of letter distributions.
     """
-
     # Make a dictionary of distributions with 0 assigned to each letter
     letter_count = {i : 0 for i in ascii_lowercase}
 
@@ -87,9 +78,7 @@ def patristocrat(text: str) -> str:
 
     # Remove non-ascii characters
     for character in text:
-        # Check if the lowercase version of the character is a lowercase letter
         if character.lower() in ascii_lowercase:
-            # Add it to the formatted text if it is a letter
             formatted_text += character
 
     text = formatted_text

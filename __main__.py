@@ -1,15 +1,9 @@
-# Import a random number generator from the standard python random module
 from random import randint
-# Import the tuple type hint from the standard python typing module
 from typing import Tuple
-# Import a list of the lowercase ascii letters from the standard python string module
 from string import ascii_lowercase
-# Import the sleep function from the standard python time module
 from time import sleep
-# Import the floor function from the standard python math module
 from math import floor
 
-# Import other python files
 import aristocrat as aristo
 import alphabet as alpha
 import quotes
@@ -109,7 +103,7 @@ def practice_cipher() -> None:
     use_patristo = choose_patristo()
 
     # Get a random quote from the list of quotes
-    quote = quotes.quotes[randint(0, len(quotes.quotes)-1)]
+    quote = quotes.get_quote()
 
     # Pass the quote to solve_cipher to display the encrypted quote to the user
     # and have the user attempt to reconstruct the original quote
@@ -156,7 +150,6 @@ def generate_user_cipher() -> None:
 def solve_unknown_cipher() -> None:
     """ Have the user attempt to solve a cipher that they input
     """
-    # Get the cipher to solve
     encrypted_text = input("Please enter the encrypted cipher to solve. ")
 
     # Display and have the user solve the cipher
@@ -267,14 +260,11 @@ def solve_cipher(quote: str, alphabet: Alphabet=None, use_patristo:bool=False) -
 def decrypt_known_cipher() -> None:
     """ Decrypt and print a cipher that the user enters, using a user-provided key.
     """
-    # Get the encrypted cipher and the alphabet type (key)
     encrypted_cipher = input("Please enter the encrypted monoalphabetic cipher. ")
     alphabet = choose_alphabet("What type of alphabet does the cipher use for its key? ")()
     
-    # Decrypt the cipher using the alphabet provided.
     decrypted_cipher = aristo.decrypt(encrypted_cipher, alphabet)
     
-    # Print the decrypted cipher
     print("Using this key, the decrypted cipher is: "
         + decrypted_cipher
     )
@@ -293,7 +283,8 @@ def main_menu(returning: bool=False) -> None:
     # Get user input and either go to cipher generation or solving.
     exit_status = get_menu_input("Welcome to cipher toolkit! This program allows you to " +
         "generate monoalphabetic ciphers, \npractice solving a cipher, " +
-        "attempt to solve a cipher, and decrypt a cipher with the key.\n", 
+        "attempt to solve a cipher, and decrypt a cipher with the key.\n" +
+        "made to practice codebusters for Science Olympiad.", 
         "Please enter a command. ", 
         False,
         ("generate cipher" , generate_user_cipher),

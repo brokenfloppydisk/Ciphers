@@ -1,18 +1,14 @@
-# Import a list of lowercase ascii letters from the standard python string module.
 from string import ascii_lowercase
-# Import the NewType constructor from the standard python typing module.
 from typing import NewType
 
-# Create the Alphabet type, which extends from the dictionary type.
 Alphabet = NewType("Alphabet", dict)
-# Create the Text type, which extends from the string type.
 Text = NewType("Text", str)
 
 def shift_text(input_list: list, shift: int, left: bool=True) -> list:
     """Shifts a list by the shift amount and returns it
     """
     # Make a copy of the input list
-    shifted_list = list(input_list)
+    shifted_list = list(input_list).copy()
 
     # Convert a left shift to a right shift (equivalent left shift + right shift = 26)
     if left:
