@@ -1,3 +1,3 @@
-# CSP-Performance-Task
+# Cipher toolkit
 
-This repository stores all of the source files for Kyle Huang's AP Computer Science Principles Performance Task.
+This project originally started off as a command-line cipher generator, but is now expanding into a Discord bot.
