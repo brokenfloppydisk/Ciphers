@@ -1,5 +1,5 @@
 from string import ascii_lowercase
-from alphabet import Alphabet
+from ciphers.alphabet import Alphabet
 
 def flip(alphabet: Alphabet) -> Alphabet:
     """Returns the alphabet with the plaintext and ciphertext swapped.

@@ -4,10 +4,10 @@ from string import ascii_lowercase
 from time import sleep
 from math import floor
 
-import aristocrat as aristo
-import alphabet as alpha
-import quotes
-from alphabet import Alphabet
+import ciphers.aristocrat as aristo
+import ciphers.alphabet as alpha
+import ciphers.quotes as quotes
+from ciphers.alphabet import Alphabet
 
 def section_header(banner_text: str) -> None:
     """ Print a section header:
