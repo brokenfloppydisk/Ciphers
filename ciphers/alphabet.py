@@ -4,7 +4,7 @@ from typing import NewType
 Alphabet = NewType("Alphabet", dict)
 Text = NewType("Text", str)
 
-def shift_text(input_list: list, shift: int, left: bool=True) -> list:
+def shift_text(input_list: list, shift: int, left: bool = True) -> list:
     """Shifts a list by the shift amount and returns it
     """
     # Make a copy of the input list
@@ -55,7 +55,7 @@ def keyword_text(keyword: str) -> str:
     # Return the final string
     return text
 
-def k_1_alphabet(shift: int=None) -> Alphabet:
+def k_1_alphabet(shift: int = None) -> Alphabet:
     """Returns a K1 alphabet with the shift.
     """
     # If shift is not set, prompt user to enter it.
@@ -67,7 +67,7 @@ def k_1_alphabet(shift: int=None) -> Alphabet:
     # Return a dictionary of lowercase ascii letters mapped to ciphertext
     return dict(zip(ascii_lowercase, ct_alphabet))
 
-def k_2_alphabet(shift: int=None, keyword: str=None) -> Alphabet:
+def k_2_alphabet(shift: int = None, keyword: str = None) -> Alphabet:
     """Returns a K2 alphabet with the shift and keyword.
     """
     # If shift or keyword are not set, prompt user to enter them.
@@ -81,7 +81,7 @@ def k_2_alphabet(shift: int=None, keyword: str=None) -> Alphabet:
     # Return a dictionary of lowercase ascii letters mapped to the ciphertext
     return dict(zip(ascii_lowercase, ct_alphabet))
 
-def k_3_alphabet(shift_1: int=None, shift_2: int=None, keyword: str=None) -> Alphabet:
+def k_3_alphabet(shift_1: int = None, shift_2: int = None, keyword: str = None) -> Alphabet:
     """Returns a K3 alphabet with the shifts and keyword.
     """
     # If shift or keyword are not set, prompt user to enter them.
@@ -101,7 +101,8 @@ def k_3_alphabet(shift_1: int=None, shift_2: int=None, keyword: str=None) -> Alp
     # Return a dictionary mapping the plaintext to the ciphertext.
     return dict(zip(pt_alphabet, ct_alphabet))
 
-def k_4_alphabet(shift_1: int=None, shift_2: int=None, keyword_1: str=None, keyword_2: str=None) -> Alphabet:
+def k_4_alphabet(shift_1: int = None, shift_2: int = None, 
+                 keyword_1: str = None, keyword_2: str = None) -> Alphabet:
     """Returns a K4 alphabet with the shifts and keywords.
     """
     # If shift or keyword are not set, prompt user to enter them.
