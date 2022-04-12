@@ -1,32 +1,22 @@
 import nextcord
 from nextcord.ext import commands
-
+from commands.default_commands import DefaultCommands
 
 class cipher_bot(commands.Bot):
-
     ciphers_dict = {
         "aristocrat" : (lambda : ())
     }
 
-    def __init__(self):
-        self.command_prefix = "!"
+    def __init__(self, command_prefix, help_command=None, description=None, self_bot=False):
+        commands.Bot.__init__(self, command_prefix=command_prefix, help_command=help_command, description=description, self_bot=self_bot)
         self.cipher_context: commands.Context = None
+        self.add_cog(DefaultCommands(self))
 
-    @commands.command()
-    async def cipher(self, ctx: commands.Context, args):
-        """ Start solving a cipher
-        """
-        self.cipher_context = ctx
+    async def on_ready(self):
+        print(f"{self.user.name} initialized")
+        print(f"ID: {self.user.id}")
 
-        if args in self.ciphers_dict:
-            await self.ciphers_dict[args]()
-    
-    @commands.command()
-    async def prefix(self, ctx: commands.Context, args):
-        await ctx.channel.send(f"Prefix changed to `{str(args)}`!")
-        self.command_prefix = str(args)
-
-bot = cipher_bot(command_prefix=["c! "], description="Cipher Bot")
+bot = cipher_bot(command_prefix=["!"], description="Cipher Bot")
 
 # Get bot token
 with open("token.txt", "r") as t:
