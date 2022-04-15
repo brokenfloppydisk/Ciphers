@@ -1,5 +1,4 @@
 import asyncio
-from pyclbr import Function
 from tokenize import Double
 import nextcord
 from nextcord.ext import commands
@@ -37,8 +36,9 @@ class cipher_bot(commands.Bot):
         self.new_content = False
         return self.most_recent_message
 
-    async def fetch_message(self, condition: Function, check_rate: Double=0.5) -> nextcord.Message:
+    async def fetch_message(self, condition, check_rate: Double=0.5) -> nextcord.Message:
         """ Fetch the next message that matches the condition
+            condition should be a function (annotating this is not currently supported by Python)
         """
         while not self.new_content and condition():
             await asyncio.sleep(check_rate)
