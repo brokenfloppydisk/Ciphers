@@ -1,5 +1,5 @@
 import asyncio
-from tokenize import Double
+from email.headerregistry import Group
 import nextcord
 from nextcord.ext import commands
 from commands.default_commands import DefaultCommands
@@ -28,7 +28,7 @@ class cipher_bot(commands.Bot):
         print(f"{self.user.name} initialized")
         print(f"ID: {self.user.id}")
     
-    async def fetch_message(self, author: nextcord.abc.User, check_rate: Double=0.5) -> nextcord.Message:
+    async def fetch_message(self, author: nextcord.abc.User, check_rate: float=0.5) -> nextcord.Message:
         """ Fetch the next message that has the same author.
         """
         while not self.new_content and self.most_recent_message.author == author:
@@ -36,7 +36,7 @@ class cipher_bot(commands.Bot):
         self.new_content = False
         return self.most_recent_message
 
-    async def fetch_message(self, condition, check_rate: Double=0.5) -> nextcord.Message:
+    async def fetch_message(self, condition, check_rate: float=0.5) -> nextcord.Message:
         """ Fetch the next message that matches the condition
             condition should be a function (annotating this is not currently supported by Python)
         """
@@ -44,6 +44,17 @@ class cipher_bot(commands.Bot):
             await asyncio.sleep(check_rate)
         self.new_content = False
         return self.most_recent_message
+
+    async def get_subcommands(command: commands.Group) -> str:
+        subcommands = command.walk_commands()
+        return "`" + \
+            "`,`".join(str(
+                [subcommand for subcommand in subcommands if subcommand.parents[0] == command])) + \
+            "`"
+
+    async def check_subcommands(ctx: commands.Context, command: commands.Group) -> None:
+        if ctx.invoked_subcommand is None or ctx.invoked_subcommand not in command.walk_commands():
+            ctx.send(f"Unknown subcommand. Please enter {cipher_bot.get_subcommands(command)}")
 
     async def on_message(self, message: nextcord.Message) -> None:
         """ Called every time a message is sent
