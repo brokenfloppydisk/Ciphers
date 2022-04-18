@@ -1,10 +1,17 @@
 import asyncio
-from email.headerregistry import Group
 import nextcord
 from nextcord.ext import commands
 from commands.default_commands import DefaultCommands
+from cipher_io import CipherIO
 
 class cipher_bot(commands.Bot):
+    def bot_print(self, ctx: commands.Context, print_args: str):
+        asyncio.run(ctx.channel.send(print_args))
+    
+    def bot_input(self, ctx: commands.Context, print_args: str, check_rate: float = 0.5):
+        self.bot_print(ctx, print_args)
+        asyncio.run(self.fetch_message(self, ctx.author, check_rate=check_rate))
+
     ciphers_dict = {
         "aristocrat" : (lambda : ())
     }
@@ -19,6 +26,9 @@ class cipher_bot(commands.Bot):
 
         self.most_recent_message: nextcord.Message = None
         self.new_content: bool = False
+        
+        CipherIO.print_function = self.bot_print
+        CipherIO.fetch_input = self.bot_input
 
         self.add_cog(DefaultCommands(self))
 
@@ -28,7 +38,7 @@ class cipher_bot(commands.Bot):
         print(f"{self.user.name} initialized")
         print(f"ID: {self.user.id}")
     
-    async def fetch_message(self, author: nextcord.abc.User, check_rate: float=0.5) -> nextcord.Message:
+    async def fetch_message(self, author: nextcord.abc.User, check_rate: float = 0.5) -> nextcord.Message:
         """ Fetch the next message that has the same author.
         """
         while not self.new_content and self.most_recent_message.author == author:

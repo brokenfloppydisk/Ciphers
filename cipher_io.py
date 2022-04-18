@@ -1,8 +1,6 @@
 from math import floor
 from typing import Tuple
 
-import ciphers.alphabet as alphabet
-
 class CipherIO():
     fetch_input = input
     print_function = print

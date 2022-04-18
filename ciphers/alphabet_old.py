@@ -2,7 +2,7 @@ class alphabet():
     # Generate the default alphabet from A to Z using list comprehension
     default_alphabet = [chr(i) for i in range(97, 123)]
 
-    def __init__(self, alphabets: "tuple[list[str]]"):
+    def __init__(self, alphabets: "tuple[list[str], list[str]]"):
         """
         Create a new alphabet.
         """
