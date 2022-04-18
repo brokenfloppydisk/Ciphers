@@ -78,7 +78,7 @@ class AristocratIO():
             "",
             False,
             ("print cipher", lambda : 
-                CipherIO.print_function("The encrypted cipher is: " + encrypted_cipher)
+                CipherIO.print("The encrypted cipher is: " + encrypted_cipher)
             ),
             ("solve cipher", lambda : 
                 cls.solve_cipher(quote, alphabet, use_patristo)
@@ -129,7 +129,7 @@ class AristocratIO():
             user_decryption = aristo.encrypt(encrypted_cipher, user_alphabet)
 
             # Print question text
-            CipherIO.print_function("Original Cipher:\n" + 
+            CipherIO.print("Original Cipher:\n" + 
                 encrypted_cipher + 
                 "\nYour decryption:\n" + 
                 (aristo.patristocrat(user_decryption) if use_patristo else user_decryption) + "\n\n" + 
@@ -142,10 +142,10 @@ class AristocratIO():
 
             # Show the letter distributions if needed
             if (show_distribution):
-                CipherIO.print_function(aristo.distribution_table(encrypted_cipher))
+                CipherIO.print(aristo.distribution_table(encrypted_cipher))
             
             # Print user options
-            CipherIO.print_function("Enter letters to switch below: (for example, ab to decrypt a to b in your key)\n"
+            CipherIO.print("Enter letters to switch below: (for example, ab to decrypt a to b in your key)\n"
                 + "Enter '.' to toggle the letter distribution.\n"
                 + "Enter 'reset' to reset your letter mappings.\n"
                 + "Enter 'exit' or 'done' to exit."
@@ -171,13 +171,13 @@ class AristocratIO():
                     user_alphabet[user_input[0]] = user_input[1]
             # Print 'Invalid input!' if the user input does not match anything
             else:
-                CipherIO.print_function(
+                CipherIO.print(
                     "-" * 80
                     + "\n\nInvalid input!\n\n")
                 continue
             
             # Print 80 of '-' to act as a section divider.
-            CipherIO.print_function("-" * 80)
+            CipherIO.print("-" * 80)
 
             distributions = aristo.distributions(encrypted_cipher)
 
@@ -194,7 +194,7 @@ class AristocratIO():
         
         # Print the end result
         if solved:
-            CipherIO.print_function("Cipher decrypted!")
+            CipherIO.print("Cipher decrypted!")
 
     @classmethod
     def decrypt_known_cipher(cls) -> None:
@@ -205,6 +205,6 @@ class AristocratIO():
         
         decrypted_cipher = aristo.decrypt(encrypted_cipher, alphabet)
         
-        CipherIO.print_function("Using this key, the decrypted cipher is: "
+        CipherIO.print("Using this key, the decrypted cipher is: "
             + decrypted_cipher
         )
